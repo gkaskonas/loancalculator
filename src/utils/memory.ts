@@ -18,5 +18,13 @@ export function getLoanCalculations(): LoanCalculation[] {
 }
 
 export function getLoanCalculation(index: number): LoanCalculation {
-    return loanCalculations[index]
+    if (loanCalculations.length === 0) {
+        throw new Error('No loan calculations available.')
+    }
+
+    try {
+        return loanCalculations[index]
+    } catch (error) {
+        throw new Error('No loan calculation available at this index.')
+    }
 }

@@ -19,49 +19,67 @@ function promptUser(): void {
         switch (command) {
             case 'create':
                 prompt.get(schema, (err, result) => {
-                    const loan: LoanInput = {
-                        startDate: new Date(result.startDate.toString()),
-                        endDate: new Date(result.endDate.toString()),
-                        loanAmount: parseFloat(result.loanAmount.toString()),
-                        loanCurrency: result.loanCurrency.toString(),
-                        baseInterestRate: parseFloat(
-                            result.baseInterestRate.toString()
-                        ),
-                        margin: parseFloat(result.margin.toString()),
+                    try {
+                        const loan: LoanInput = {
+                            startDate: new Date(result.startDate.toString()),
+                            endDate: new Date(result.endDate.toString()),
+                            loanAmount: parseFloat(
+                                result.loanAmount.toString()
+                            ),
+                            loanCurrency: result.loanCurrency.toString(),
+                            baseInterestRate: parseFloat(
+                                result.baseInterestRate.toString()
+                            ),
+                            margin: parseFloat(result.margin.toString()),
+                        }
+                        const loanCalculation = calculateLoanInterest(loan)
+                        postLoanCalculation(loanCalculation)
+                        displayCalculationsOverview()
+                        promptUser()
+                    } catch (error) {
+                        console.log(error.message)
+                        promptUser()
                     }
-                    const loanCalculation = calculateLoanInterest(loan)
-                    postLoanCalculation(loanCalculation)
-                    displayCalculationsOverview()
-                    promptUser()
                 })
                 break
 
             case 'view':
                 prompt.get(['index'], (err, result) => {
-                    const index = parseInt(result.index.toString()) - 1
-                    displayCalculationsOverview(index)
-                    displayDailyInterest(index)
-                    promptUser()
+                    try {
+                        const index = parseInt(result.index.toString()) - 1
+                        displayCalculationsOverview(index)
+                        displayDailyInterest(index)
+                        promptUser()
+                    } catch (error) {
+                        console.log(error.message)
+                        promptUser()
+                    }
                 })
                 break
 
             case 'update':
                 prompt.get(updateSchema, (err, result) => {
-                    const loan: LoanInput = {
-                        startDate: new Date(result.startDate.toString()),
-                        endDate: new Date(result.endDate.toString()),
-                        loanAmount: parseFloat(result.loanAmount.toString()),
-                        loanCurrency: result.loanCurrency.toString(),
-                        baseInterestRate: parseFloat(
-                            result.baseInterestRate.toString()
-                        ),
-                        margin: parseFloat(result.margin.toString()),
+                    try {
+                        const loan: LoanInput = {
+                            startDate: new Date(result.startDate.toString()),
+                            endDate: new Date(result.endDate.toString()),
+                            loanAmount: parseFloat(
+                                result.loanAmount.toString()
+                            ),
+                            loanCurrency: result.loanCurrency.toString(),
+                            baseInterestRate: parseFloat(
+                                result.baseInterestRate.toString()
+                            ),
+                            margin: parseFloat(result.margin.toString()),
+                        }
+                        const index =
+                            parseInt(result.selectedCalculation.toString()) - 1
+                        updateLoanCalculation(index, loan)
+                        displayCalculationsOverview()
+                        promptUser()
+                    } catch (error) {
+                        promptUser()
                     }
-                    const index =
-                        parseInt(result.selectedCalculation.toString()) - 1
-                    updateLoanCalculation(index, loan)
-                    displayCalculationsOverview()
-                    promptUser()
                 })
                 break
 

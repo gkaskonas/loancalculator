@@ -78,8 +78,7 @@ export function displayCalculationsOverview(index?: number): void {
     const loanCalculations = getLoanCalculations()
 
     if (loanCalculations.length === 0) {
-        console.log('No loan calculations available.')
-        return
+        throw new Error('No loan calculations available.')
     }
 
     const table = new Table({
@@ -98,20 +97,24 @@ export function displayCalculationsOverview(index?: number): void {
     })
 
     if (index) {
-        const calculation = loanCalculations[index]
-        table.push([
-            (index + 1).toString(),
-            calculation.startDate.toISOString().split('T')[0],
-            calculation.endDate.toISOString().split('T')[0],
-            calculation.loanAmount.toString(),
-            calculation.loanCurrency.toString(),
-            calculation.baseInterestRate.toString(),
-            calculation.margin.toString(),
-            calculation.totalInterest,
-            calculation.totalInterestWithoutMargin,
-        ])
-        console.log(table.toString())
-        return
+        try {
+            const calculation = loanCalculations[index]
+            table.push([
+                (index + 1).toString(),
+                calculation.startDate.toISOString().split('T')[0],
+                calculation.endDate.toISOString().split('T')[0],
+                calculation.loanAmount.toString(),
+                calculation.loanCurrency.toString(),
+                calculation.baseInterestRate.toString(),
+                calculation.margin.toString(),
+                calculation.totalInterest,
+                calculation.totalInterestWithoutMargin,
+            ])
+            console.log(table.toString())
+            return
+        } catch (error) {
+            throw new Error('No loan calculation available at this index.')
+        }
     }
 
     loanCalculations.forEach((calculation, index) => {
@@ -138,6 +141,11 @@ export function displayCalculationsOverview(index?: number): void {
  */
 export function displayDailyInterest(index: number): void {
     const calculation = getLoanCalculation(index)
+
+    if (!calculation) {
+        console.log('No loan calculation available at this index.')
+        return
+    }
     if (!calculation.details || calculation.details.length === 0) {
         console.log('No daily interest details available for this calculation.')
         return
@@ -169,19 +177,19 @@ export function displayDailyInterest(index: number): void {
 /**
  * Updates an existing loan calculation based on user input.
  *
- * @param loan - Loan Input parameters.
  * @param index - Index of the loan calculation to update.
+ * @param loan - Loan Input parameters.
  */
 export function updateLoanCalculation(index: number, loan: LoanInput): void {
     const loanCalculations = getLoanCalculations()
 
     if (loanCalculations.length === 0) {
-        console.log('No previous calculations available.')
-        return
+        throw new Error('No loan calculations available.')
     }
 
-    if (index >= 0 && index < loanCalculations.length) {
-        const updatedCalculation = calculateLoanInterest(loan)
-        putLoanCalculation(updatedCalculation, index)
-    }
+    if (index < 0 || index > loanCalculations.length)
+        throw new Error('Invalid index.')
+
+    const updatedCalculation = calculateLoanInterest(loan)
+    putLoanCalculation(updatedCalculation, index)
 }
