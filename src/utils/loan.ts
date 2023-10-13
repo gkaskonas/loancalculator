@@ -92,8 +92,10 @@ export function displayCalculationsOverview(index?: number): void {
             'Margin',
             'Total Interest',
             'Total Interest Without Margin',
+            'Daily Interest (Accrued)',
+            'Daily Interest (Without Margin)',
         ],
-        colWidths: [15, 12, 12, 15, 15, 20, 10, 20, 30],
+        colWidths: [15, 12, 12, 15, 15, 20, 10, 20, 30, 20, 30],
     })
 
     if (index) {
@@ -109,6 +111,8 @@ export function displayCalculationsOverview(index?: number): void {
                 calculation.margin.toString(),
                 calculation.totalInterest,
                 calculation.totalInterestWithoutMargin,
+                calculation.details[0].dailyInterestAccrued,
+                calculation.details[0].dailyInterestWithoutMargin,
             ])
             console.log(table.toString())
             return
@@ -128,6 +132,8 @@ export function displayCalculationsOverview(index?: number): void {
             calculation.margin.toString(),
             calculation.totalInterest,
             calculation.totalInterestWithoutMargin,
+            calculation.details[0].dailyInterestAccrued,
+            calculation.details[0].dailyInterestWithoutMargin,
         ])
     })
 
