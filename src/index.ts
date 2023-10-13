@@ -47,8 +47,8 @@ function promptUser(): void {
                 prompt.get(['index'], (err, result) => {
                     try {
                         const index = parseInt(result.index.toString()) - 1
-                        displayCalculationsOverview(index)
                         displayDailyInterest(index)
+                        displayCalculationsOverview(index)
                         promptUser()
                     } catch (error) {
                         console.log(error.message)
